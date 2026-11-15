@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Launch Radar — pre-token protocols ranked by implied value</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="pulse" aria-hidden="true"></span><span class="brand-name">LAUNCH&nbsp;RADAR</span><span class="brand-sub">token-radar-01 &middot; model radar-2</span></div>
+  <p class="lede">What would a protocol&rsquo;s token be worth if its record stayed as it is? Every row below records no token yet. Its implied value is priced off the live market: the median market-cap-to-TVL multiple of its own category. Click any row for the maths and the farm plan.</p>
+  <dl class="stats" id="stats"></dl>
+</header>
+<nav class="filters" aria-label="Board filters">
+  <label>Search <input id="q" type="search" placeholder="name or slug&hellip;" autocomplete="off"></label>
+  <label>Category <select id="cat"><option value="">All categories</option></select></label>
+  <label>Chain <select id="chain"><option value="">All chains</option></select></label>
+  <label class="check"><input id="watch" type="checkbox"> Watchlist only</label>
+  <button id="reset" type="button">Reset</button>
+  <span class="count" id="count"></span>
+</nav>
+<main>
+  <section class="board-wrap" aria-label="Ranked board">
+    <table id="board">
+      <thead><tr>
+        <th data-k="rank">Rank</th><th data-k="name">Protocol</th><th data-k="category">Category</th>
+        <th data-k="tvl_usd">TVL</th><th data-k="change_7d">7d</th><th data-k="age_days">Age</th>
+        <th data-k="implied_value_usd">Implied value</th><th>Chains</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p class="hint">Click a row to open its detail view. Click a column heading to sort.</p>
+  </section>
+  <section class="detail" id="detail" aria-label="Protocol detail" hidden></section>
+  <section class="method" aria-label="Methodology">
+    <h2>How the value is priced</h2>
+    <p>For each category, the multiple is the <strong>median mcap&thinsp;/&thinsp;TVL</strong> of the live-token protocols in that category (119 live peers in this snapshot). Categories with fewer than 3 live peers use the global median (<span id="gmed"></span>). Multiples are clamped to [0.05, 1.50].</p>
+    <p class="formula">implied = max(1, round( TVL &times; multiple &times; (1 + clamp(7d,&nbsp;&minus;50,&nbsp;100)/100 &times; 0.35) &times; (0.7 + min(age,&nbsp;1460)/1460 &times; 0.5) &times; (1 + 0.03 &times; min(chains,&nbsp;5)) ))</p>
+    <p>Growth, age and chain breadth are the only adjustments. No name is ever special-cased; the same function scores every row. A protocol &ldquo;records no token&rdquo; means DefiLlama carries no market cap, CoinGecko id or symbol for it &mdash; not proof it has none.</p>
+    <h3>Category multiples, derived from this snapshot</h3>
+    <table id="mults"><thead><tr><th>Category</th><th>Live peers</th><th>Median mcap/TVL</th><th>Multiple used</th><th>Source</th></tr></thead><tbody></tbody></table>
+  </section>
+  <section class="live" aria-label="Live-token comparison">
+    <h2>Live tokens: what the market actually pays</h2>
+    <p>The 24 largest live-token protocols by market cap, kept apart from the board. Their mcap/TVL ratios are the comparables the model is priced from &mdash; the board never mixes a traded token into a launch ranking.</p>
+    <table id="live"><thead><tr><th>Protocol</th><th>Category</th><th>TVL</th><th>Market cap</th><th>mcap / TVL</th><th>7d</th></tr></thead><tbody></tbody></table>
+  </section>
+  <footer>
+    <p>Snapshot: <span id="src"></span>. Board: every watchlist protocol plus every other rankable pre-token protocol below the floor, ranked by implied value. Farm plans are suggestions, not advice; never pay a fee to claim anything.</p>
+  </footer>
+</main>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
